@@ -33,6 +33,6 @@ will fire. Potential events and their probabilities of firing are:
 ## Installation
 
 Download the Annoy-o-tron sketch, compile it on to your ESP32-S2, and then
-watch the serial output to see events firing. You can tweak the probabilities
+check the serial output to see events firing. You can tweak the probabilities
 to your liking in the code. Once you are happy with how it's performing,
 you can see sneak it behind your victim's machine.
