@@ -14,7 +14,7 @@ of the original toy on a $2 micro-controller.
 To mildly inconvenience your friends and enemies, or to play a practical
 joke on your co-workers
 
-## How does it work
+## How does it work?
 
 Annoy-o-tron uses the built-in USB-OTG capabilities of your ESP32-S2 to
 emulate a keyboard and a mouse. On a specified interval a random event
