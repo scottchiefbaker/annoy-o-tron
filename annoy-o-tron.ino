@@ -55,7 +55,7 @@ void loop() {
 	// Are we due for another action
 	bool past_interval = millis() - last_action > interval;
 
-	if (enabled && past_interval) {
+	if (past_interval) {
 
 		// Check to see if we need to randomly fire an event or not.
 		//
@@ -63,10 +63,14 @@ void loop() {
 		// random(100) has a 1/100 chance of firing
 		// random(500) has a 1/500 chance of firing
 		// etc.
-		if (random(10) == 1) {
+		if (!enabled) {
+			Serial.println("Disabled");
+		} else if (random(10) == 1) {
 			rand_mouse_move();
 		} else if (random(50) == 1) {
 			random_arrow_key();
+		} else if (random(100) == 1) {
+			mouse_right_click();
 		} else if (random(200) == 1) {
 			toggle_capslock();
 		} else if (random(500) == 1) {
@@ -75,8 +79,6 @@ void loop() {
 			send_alt_tab();
 		} else if (random(1000) == 1) {
 			send_screen_lock();
-		} else if (random(100) == 1) {
-			mouse_right_click();
 		} else {
 			Serial.println("No action");
 		}
