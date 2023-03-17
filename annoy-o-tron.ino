@@ -48,6 +48,8 @@ void setup() {
 	USB.begin();
 }
 
+///////////////////////////////////////////////////////////////////////////////
+
 void loop() {
 	// Check to see if the button was pressed to enable/disable annoy-o-tron
 	check_enable_toggle();
@@ -127,8 +129,7 @@ void send_screen_lock() {
 void toggle_capslock() {
 	Serial.println("Toggling capslock");
 
-	Keyboard.press(KEY_CAPS_LOCK);
-	Keyboard.releaseAll();
+	Keyboard.write(KEY_CAPS_LOCK);
 }
 
 // https://github.com/espressif/arduino-esp32/blob/master/libraries/USB/src/USBHIDKeyboard.h#L49
@@ -159,10 +160,12 @@ void check_enable_toggle() {
 		return;
 	}
 
+	// If the button has changed since last time we checked
 	if (x != lastButtonState) {
 		lastButtonState = x;
 		last_press      = millis();
 
+		// Button down
 		if (x == LOW) {
 			enabled = !enabled;
 
@@ -171,11 +174,13 @@ void check_enable_toggle() {
 			} else {
 				Serial.println("Disabling annoy-o-tron");
 			}
+		// Button up
 		} else {
 			//Serial.println("Button up");
 		}
 	}
 
+	// Set the light to match the enabled state
 	digitalWrite(15, enabled);
 }
 
