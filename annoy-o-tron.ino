@@ -185,22 +185,54 @@ void check_enable_toggle() {
 }
 
 void rand_mouse_move() {
-	int dirX = random(2);
-	int dirY = random(2);
+	// Delay between each mouse move... if we move on average 60 times
+	// this works out to just about 1/10th of a second for the whole
+	// move. Set this to 0 to be instantaneous
+	uint8_t my_delay = 2;
 
-	// X direction
-	int lenX = random(0, 40);
-	if (dirX == 0) {
-		lenX *= -1;
+	// Calculate how far we want to move the mouse in each direction
+	int16_t x_dest = random(80) + 20;
+	int16_t y_dest = random(80) + 20;
+	float slope     = y_dest / (float)x_dest;
+
+	//Serial.printf("0,0 to %d,%d = slope %0.3f\n", x_dest, y_dest, slope);
+
+	// Previous x,y coordinates
+	int16_t prev_x = 0;
+	int16_t prev_y = 0;
+
+	// Is the move up or left
+	bool up   = random(2);
+	bool left = random(2);
+
+	// We calculate each X-coordinate and move the mouse accordingly
+	// essentially one x-pixel at a time
+	for (int i = 0; i < x_dest; i++) {
+		float x = i;
+		float y = slope * x;
+
+		// If it's left or up we flip the sign to negative
+		if (left) { x *= -1; }
+		if (up)   { y *= -1; }
+
+		// Calculate the difference in units this mini-move should be
+		int8_t diff_x = int(x) - prev_x;
+		int8_t diff_y = int(y) - prev_y;
+
+		if (prev_x || prev_y) {
+			Mouse.move(diff_x, diff_y);
+			delay(my_delay);
+		}
+
+		// Store the x,y coordinates for next time
+		prev_x = int(x);
+		prev_y = int(y);
 	}
-	Mouse.move(0, lenX);
 
-	// Y direction
-	int lenY = random(0, 40);
-	if (dirY == 0) {
-		lenY *= -1;
-	}
-	Mouse.move(lenY, 0);
+	if (left) { x_dest *= -1; }
+	if (up)   { y_dest *= -1; }
 
-	Serial.printf("Moving mouse: %d,%d\r\n", lenX, lenY);
+	Serial.printf("Moved mouse: %d,%d\r\n", x_dest, y_dest);
+
+	return;
 }
